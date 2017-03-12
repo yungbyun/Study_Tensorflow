@@ -6,13 +6,51 @@ import numpy
 import myplot
 
 
+class TFVariable:
+    import tensorflow as tf
+    import numpy
+
+    @staticmethod
+    def get_var(self, name):
+        return tf.Variable(numpy.random.randn(), name)
+
+    @staticmethod
+    def get_var_list(self, number):
+        tf.Variable(tf.random_uniform([number], -1.0, 1.0))  # 리스트로
+
+
 class XXX:
-    def tf_random_var(self, name):
+    costs = []
+    weights = []
+    biases = []
+    logs = []
+
+
+    def get_var(self, name):
         #randn 파라미터가 없을 경우 randn 함수는 단일 Python float 값 리턴
         return tf.Variable(numpy.random.randn(), name)
 
-    def tf_random_vars(self):
+    def get_var_list(self):
         return tf.Variable(tf.random_uniform([1], -1.0, 1.0)) #리스트로
+
+    def show_error(self):
+        mp = myplot.MyPlot()
+        mp.set_labels('Step', 'Cost')
+        mp.show_list(self.costs)
+
+    def show_weight(self):
+        mp = myplot.MyPlot()
+        mp.set_labels('Step', 'Weight')
+        mp.show_list(self.weights)
+
+    def show_bias(self):
+        mp = myplot.MyPlot()
+        mp.set_labels('Step', 'Bias')
+        mp.show_list(self.biases)
+
+    def print_log(self):
+        for item in self.logs:
+            print(item)
 
     def run(self):
         sess = tf.Session()
@@ -25,8 +63,8 @@ class XXX:
         W1 = tf.Variable(tf.random_uniform([1], -1.0, 1.0)) #리스트로
         b1 = tf.Variable(tf.random_uniform([1], -1.0, 1.0)) #리스트로
 
-        W = self.tf_random_var('weight')
-        b = tf.Variable(rng.randn(), name="bias") #단일값으로
+        W = self.get_var('weight')
+        b = self.get_var('bias')
 
         # tf Graph Input
         #X = tf.placeholder("float")
@@ -41,13 +79,7 @@ class XXX:
         optimizer = tf.train.GradientDescentOptimizer(l_rate)
         learning = optimizer.minimize(error)
 
-        costs = []
-        weights = []
-        biases = []
-        logs = []
-
         init = tf.global_variables_initializer()
-        sess.run(init)
         sess.run(init)
 
         print(sess.run(W1))
@@ -56,37 +88,25 @@ class XXX:
             sess.run(learning) #, feed_dict={X: x_data, Y: y_data})
 
             if step % 40 == 0:
-                val_cost = sess.run(error) #, feed_dict={X: x_data, Y: y_data})
+                val_error = sess.run(error) #, feed_dict={X: x_data, Y: y_data})
                 val_weight = sess.run(W)
                 val_bias = sess.run(b)
 
                 #print(step, 'cost:', val_cost, 'weight:', val_weight, 'bias:', val_bias)
 
-                str = '{} cost:{} weight:{} bias:{}'.format(step, val_cost, val_weight, val_bias)
-                logs.append(str)
+                str = '{} cost:{} weight:{} bias:{}'.format(step, val_error, val_weight, val_bias)
+                self.logs.append(str)
 
-                costs.append(val_cost)
-                weights.append(val_weight)
-                biases.append(val_bias)
+                self.costs.append(val_error)
+                self.weights.append(val_weight)
+                self.biases.append(val_bias)
 
         print("Learning finished!")
 
-        for item in logs:
-            print(item)
-
-        '''
-
-        gildong = myplot.MyPlot()
-        gildong.set_labels('Step', 'Cost')
-        gildong.show_list(costs)
-
-        gildong.set_labels('Step', 'Weight')
-        gildong.show_list(weights)
-
-        gildong.set_labels('Step', 'Bias')
-        gildong.show_list(biases)
-        '''
 
 gildong = XXX()
 gildong.run()
-
+gildong.show_error()
+gildong.show_weight()
+gildong.show_bias()
+gildong.print_log()
