@@ -11,12 +11,14 @@ class TFVariable:
     import numpy
 
     @staticmethod
-    def get_var(self, name):
+    def get_var(name):
         return tf.Variable(numpy.random.randn(), name)
 
     @staticmethod
-    def get_var_list(self, number):
-        tf.Variable(tf.random_uniform([number], -1.0, 1.0))  # 리스트로
+    def get_var_list(number):
+        return tf.Variable(tf.random_uniform([number], -1.0, 1.0))  # 리스트로
+
+    get_var_static = staticmethod(get_var)
 
 
 class XXX:
@@ -24,7 +26,6 @@ class XXX:
     weights = []
     biases = []
     logs = []
-
 
     def get_var(self, name):
         #randn 파라미터가 없을 경우 randn 함수는 단일 Python float 값 리턴
@@ -63,8 +64,8 @@ class XXX:
         W1 = tf.Variable(tf.random_uniform([1], -1.0, 1.0)) #리스트로
         b1 = tf.Variable(tf.random_uniform([1], -1.0, 1.0)) #리스트로
 
-        W = self.get_var('weight')
-        b = self.get_var('bias')
+        W = TFVariable.get_var('weight')
+        b = TFVariable.get_var('bias')
 
         # tf Graph Input
         #X = tf.placeholder("float")
@@ -107,6 +108,6 @@ class XXX:
 gildong = XXX()
 gildong.run()
 gildong.show_error()
-gildong.show_weight()
-gildong.show_bias()
+#gildong.show_weight()
+#gildong.show_bias()
 gildong.print_log()
