@@ -1,24 +1,9 @@
 from __future__ import print_function
 
-import tensorflow as tf
-import matplotlib.pyplot as plot
 import numpy
+import tensorflow as tf
+import tfvariable
 import myplot
-
-
-class TFVariable:
-    import tensorflow as tf
-    import numpy
-
-    @staticmethod
-    def get_var(name):
-        return tf.Variable(numpy.random.randn(), name)
-
-    @staticmethod
-    def get_var_list(number):
-        return tf.Variable(tf.random_uniform([number], -1.0, 1.0))  # 리스트로
-
-    get_var_static = staticmethod(get_var)
 
 
 class XXX:
@@ -27,16 +12,9 @@ class XXX:
     biases = []
     logs = []
 
-    def get_var(self, name):
-        #randn 파라미터가 없을 경우 randn 함수는 단일 Python float 값 리턴
-        return tf.Variable(numpy.random.randn(), name)
-
-    def get_var_list(self):
-        return tf.Variable(tf.random_uniform([1], -1.0, 1.0)) #리스트로
-
     def show_error(self):
         mp = myplot.MyPlot()
-        mp.set_labels('Step', 'Cost')
+        mp.set_labels('Step', 'Error')
         mp.show_list(self.costs)
 
     def show_weight(self):
@@ -53,19 +31,13 @@ class XXX:
         for item in self.logs:
             print(item)
 
-    def run(self):
+    def learning(self, x_data, y_data):
         sess = tf.Session()
 
-        rng = numpy.random
-
-        x_data = [1., 2., 3.]
-        y_data = [1., 2., 3.]
-
-        W1 = tf.Variable(tf.random_uniform([1], -1.0, 1.0)) #리스트로
-        b1 = tf.Variable(tf.random_uniform([1], -1.0, 1.0)) #리스트로
-
-        W = TFVariable.get_var('weight')
-        b = TFVariable.get_var('bias')
+        #W = TFVariable.get_var_list(1)
+        #b = TFVariable.get_var_list(1)
+        W = tfvariable.TFVariable.get_var('weight')
+        b = tfvariable.TFVariable.get_var('bias')
 
         # tf Graph Input
         #X = tf.placeholder("float")
@@ -83,7 +55,7 @@ class XXX:
         init = tf.global_variables_initializer()
         sess.run(init)
 
-        print(sess.run(W1))
+        print(sess.run(W))
 
         for step in range(2001):
             sess.run(learning) #, feed_dict={X: x_data, Y: y_data})
@@ -106,7 +78,9 @@ class XXX:
 
 
 gildong = XXX()
-gildong.run()
+x_data = [1., 2., 3.]
+y_data = [1., 2., 3.]
+gildong.learning(x_data, y_data)
 gildong.show_error()
 #gildong.show_weight()
 #gildong.show_bias()
