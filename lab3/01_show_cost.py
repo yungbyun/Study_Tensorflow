@@ -1,13 +1,12 @@
 from __future__ import print_function
 
-
 import tensorflow as tf
 from matplotlib import pyplot as plt
 
 # Graph Input
 X = [1., 2., 3.]
 Y = [1., 2., 3.]
-m = n_smaples = len(X)
+m = len(X)
 
 # model weight
 W = tf.placeholder(tf.float32)
